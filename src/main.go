@@ -7,7 +7,6 @@ import (
 
 func main() {
 	engine := engine.NewEngine()
-	engine.InitCore()
 
 	level1 := levels.NewLevel1(engine)
 	engine.AddScene(level1)

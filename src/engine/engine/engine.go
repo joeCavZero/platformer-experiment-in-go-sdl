@@ -17,7 +17,9 @@ type Engine struct {
 }
 
 func NewEngine() *Engine {
-	return &Engine{}
+	engine := Engine{}
+	engine.initCore()
+	return &engine
 }
 
 func (e *Engine) Run() {
@@ -116,7 +118,7 @@ func (e *Engine) close() {
 	sdl.Quit()
 }
 
-func (e *Engine) InitCore() {
+func (e *Engine) initCore() {
 	//==== SDL INITIALIZATION ====
 	err := sdl.Init(uint32(sdl.INIT_EVERYTHING))
 	if err != nil {
