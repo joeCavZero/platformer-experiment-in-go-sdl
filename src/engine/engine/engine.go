@@ -13,13 +13,17 @@ type Engine struct {
 	Canvas    *sdl.Texture
 	IsRunning bool
 	Keyboard  []uint8
-	Scene     scene.SceneInterface
+	scene     scene.SceneInterface
 }
 
 func NewEngine() *Engine {
 	engine := Engine{}
 	engine.initCore()
 	return &engine
+}
+
+func (e *Engine) SetScene(scene scene.SceneInterface) {
+	e.scene = scene
 }
 
 func (e *Engine) Run() {
@@ -42,10 +46,6 @@ func (e *Engine) Run() {
 
 }
 
-func (e *Engine) AddScene(scene scene.SceneInterface) {
-	e.Scene = scene
-}
-
 func (e *Engine) handleEvents() {
 	for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 		switch event.(type) {
@@ -58,7 +58,7 @@ func (e *Engine) handleEvents() {
 }
 
 func (e *Engine) process() {
-	e.Scene.Process(&e.Keyboard)
+	e.scene.Process(&e.Keyboard)
 }
 
 func (e *Engine) render() {
@@ -70,10 +70,7 @@ func (e *Engine) render() {
 		e.Renderer.SetDrawColor(0, 155, 155, 255)
 		e.Renderer.Clear()
 
-		e.Renderer.SetDrawColor(255, 255, 255, 255)
-		e.Renderer.DrawLine(0, 0, 640, 360)
-
-		e.Scene.Render(e.Renderer)
+		e.scene.Render(e.Renderer)
 	}
 	e.Renderer.SetRenderTarget(nil)
 	e.renderCanvas()

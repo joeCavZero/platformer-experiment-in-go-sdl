@@ -1,7 +1,6 @@
 package player
 
 import (
-	"project/src/engine/engine"
 	"project/src/entities/entity"
 	"project/src/settings"
 
@@ -10,13 +9,12 @@ import (
 
 type Player struct {
 	entity.Entity
-	engine    *engine.Engine
 	speed     float32
 	velocity  sdl.FPoint
 	jumpForce float32
 }
 
-func NewPlayer(engine *engine.Engine) *Player {
+func NewPlayer() *Player {
 	return &Player{
 		Entity: entity.Entity{
 			Position: sdl.FPoint{
@@ -71,6 +69,8 @@ func (p *Player) moveAndCollide() {
 }
 
 func (p *Player) Draw(renderer *sdl.Renderer) {
+	renderer.SetDrawColor(255, 255, 255, 255)
+
 	renderer.FillRectF(
 		&sdl.FRect{
 			X: p.Position.X,

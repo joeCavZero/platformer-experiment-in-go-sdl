@@ -9,7 +9,8 @@ func main() {
 	engine := engine.NewEngine()
 
 	level1 := levels.NewLevel1(engine)
-	engine.AddScene(level1)
+
+	engine.SetScene(level1)
 
 	engine.Run()
 }
