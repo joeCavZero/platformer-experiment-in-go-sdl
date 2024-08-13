@@ -17,6 +17,10 @@ type Layer struct {
 	tilemap   *[settings.TILE_QUANTITY]tilemap.Tile
 }
 
+func (l *Layer) GetTilemap() *[settings.TILE_QUANTITY]tilemap.Tile {
+	return l.tilemap
+}
+
 func NewEntityLayer() *Layer {
 	return &Layer{
 		layerType: 'e',
@@ -44,19 +48,6 @@ func (l *Layer) GetLayerType() byte {
 }
 
 func (l *Layer) LoadTilemap() {
-	/*
-		for y_index := 0; y_index < settings.TILE_Y_QUANTITY; y_index++ {
-			for x_index := 0; x_index < settings.TILE_X_QUANTITY; x_index++ {
-				l.tilemap[(y_index*settings.TILE_X_QUANTITY)+x_index] = tilemap.Tile{
-					TileType: 0,
-					Position: sdl.Point{
-						X: int32(x_index * 32),
-						Y: int32(y_index * 32),
-					},
-				}
-			}
-		}
-	*/
 
 	file, err := os.Open("data/level.data")
 	if err != nil {
@@ -69,6 +60,12 @@ func (l *Layer) LoadTilemap() {
 	for scanner.Scan() {
 		content += scanner.Text()
 	}
+
+	var byte_map map[byte]uint8 = map[byte]uint8{
+		'0': 0,
+		'1': 1,
+		'2': 2,
+	}
 	for i := 0; i < settings.TILE_QUANTITY; i++ {
 		char := content[i]
 		switch char {
@@ -77,9 +74,9 @@ func (l *Layer) LoadTilemap() {
 				TileType: 0,
 				Position: sdl.Point{X: 0, Y: 0},
 			}
-		case '1':
+		default:
 			l.tilemap[i] = tilemap.Tile{
-				TileType: int(char),
+				TileType: byte_map[char],
 				Position: sdl.Point{
 					X: int32(
 						(i % settings.TILE_X_QUANTITY) * 32,
@@ -89,6 +86,7 @@ func (l *Layer) LoadTilemap() {
 					),
 				},
 			}
+
 		}
 
 	}
@@ -96,13 +94,48 @@ func (l *Layer) LoadTilemap() {
 
 func (l *Layer) RenderTilemap(renderer *sdl.Renderer) {
 	for _, tile := range l.tilemap {
-		if tile.TileType == 0 {
-			continue
-		} else {
+		/*
+			if tile.TileType == 0 {
+				continue
+			} else {
+				renderer.Copy(
+					l.texture,
+					&sdl.Rect{
+						X: 0, Y: 0,
+						W: 32, H: 32,
+					},
+					&sdl.Rect{
+						X: tile.Position.X, Y: tile.Position.Y,
+						W: 32, H: 32,
+					},
+				)
+			}
+		*/
+
+		switch tile.TileType {
+		case 1:
+			renderer.FillRect(
+				&sdl.Rect{
+					X: tile.Position.X, Y: tile.Position.Y,
+					W: 32, H: 32,
+				},
+			)
 			renderer.Copy(
 				l.texture,
 				&sdl.Rect{
 					X: 0, Y: 0,
+					W: 32, H: 32,
+				},
+				&sdl.Rect{
+					X: tile.Position.X, Y: tile.Position.Y,
+					W: 32, H: 32,
+				},
+			)
+		case 2:
+			renderer.Copy(
+				l.texture,
+				&sdl.Rect{
+					X: 32, Y: 0,
 					W: 32, H: 32,
 				},
 				&sdl.Rect{

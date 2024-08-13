@@ -26,6 +26,10 @@ func (e *Engine) SetScene(scene scene.SceneInterface) {
 	e.scene = scene
 }
 
+func (e *Engine) GetScene() scene.SceneInterface {
+	return e.scene
+}
+
 func (e *Engine) Run() {
 
 	for e.IsRunning {

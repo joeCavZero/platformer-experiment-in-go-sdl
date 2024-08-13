@@ -1,8 +1,8 @@
 package player
 
 import (
+	"project/src/engine/engine"
 	"project/src/entities/entity"
-	"project/src/settings"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -12,18 +12,20 @@ type Player struct {
 	speed     float32
 	velocity  sdl.FPoint
 	jumpForce float32
+
+	engine *engine.Engine
 }
 
-func NewPlayer() *Player {
+func NewPlayer(engine *engine.Engine) *Player {
 	return &Player{
 		Entity: entity.Entity{
 			Position: sdl.FPoint{
-				X: 0,
-				Y: 0,
+				X: 32,
+				Y: 128,
 			},
 			Size: sdl.FPoint{
-				X: 32,
-				Y: 32,
+				X: 30,
+				Y: 30,
 			},
 		},
 		speed: 1.0,
@@ -32,7 +34,12 @@ func NewPlayer() *Player {
 			Y: 0,
 		},
 		jumpForce: 3.0,
+		engine:    engine,
 	}
+}
+
+func (p *Player) SetEngine(engine *engine.Engine) {
+	p.engine = engine
 }
 
 func (p *Player) Update(keyboard *[]uint8) {
@@ -44,7 +51,7 @@ func (p *Player) Update(keyboard *[]uint8) {
 		p.velocity.X = 0
 	}
 
-	if (*keyboard)[sdl.SCANCODE_W] == 1 && p.Position.Y+p.Size.Y == settings.CANVAS_HEIGHT {
+	if (*keyboard)[sdl.SCANCODE_W] == 1 && p.isOnFloor() {
 		p.velocity.Y = -p.jumpForce
 	}
 
@@ -57,15 +64,39 @@ func (p *Player) moveAndCollide() {
 	p.Position.X += p.velocity.X
 	p.Position.Y += p.velocity.Y
 
-	if p.Position.Y+p.Size.Y > settings.CANVAS_HEIGHT {
-		p.Position.Y = settings.CANVAS_HEIGHT - p.Size.Y
+	for _, tile := range p.engine.GetScene().GetLayers()[0].GetTilemap() {
+		if tile.CheckCollision(int32(p.Position.X+p.velocity.X), int32(p.Position.Y), int32(p.Size.X), int32(p.Size.Y)) {
+			p.Position.X -= p.velocity.X
+			p.velocity.X = 0
+		}
+		if tile.CheckCollision(int32(p.Position.X), int32(p.Position.Y+redDirection(p.velocity.Y)), int32(p.Size.X), int32(p.Size.Y)) {
+			if p.velocity.Y > 0 { // if falling
+
+				p.Position.Y -= p.velocity.Y
+				p.velocity.Y = 0
+			} else if p.velocity.Y < 0 { // if jumping
+
+				p.Position.Y -= p.velocity.Y
+				p.velocity.Y = 0
+			}
+		}
 	}
 
-	if p.Position.X < 0 {
-		p.Position.X = 0
-	} else if p.Position.X+p.Size.X > settings.CANVAS_WIDTH {
-		p.Position.X = settings.CANVAS_WIDTH - p.Size.X
+}
+
+func (p *Player) isOnFloor() bool {
+	for _, tile := range p.engine.GetScene().GetLayers()[0].GetTilemap() {
+		var foot_offset float32 = 1
+		if tile.CheckCollision(
+			int32(p.Position.X+foot_offset),
+			int32(p.Position.Y+p.Size.Y),
+			int32(p.Size.X-foot_offset*2),
+			int32(foot_offset*2),
+		) {
+			return true
+		}
 	}
+	return false
 }
 
 func (p *Player) Draw(renderer *sdl.Renderer) {
@@ -79,4 +110,13 @@ func (p *Player) Draw(renderer *sdl.Renderer) {
 			H: p.Size.Y,
 		},
 	)
+}
+
+func redDirection(x float32) float32 {
+	if x > 0 {
+		return 0.1
+	} else if x < 0 {
+		return -0.1
+	}
+	return 0
 }

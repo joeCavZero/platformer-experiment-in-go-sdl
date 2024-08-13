@@ -21,7 +21,7 @@ func NewLevel1(engine *engine.Engine) *Level1 {
 	)
 
 	level.AddEntity(
-		player.NewPlayer(),
+		player.NewPlayer(engine),
 		1,
 	)
 	return &level
