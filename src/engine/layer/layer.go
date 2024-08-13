@@ -2,9 +2,8 @@ package layer
 
 import (
 	"bufio"
-	"fmt"
 	"os"
-	assetmanager "project/src/engine/assetManager"
+	assetManager "project/src/engine/assetManager"
 	"project/src/engine/tilemap"
 	"project/src/settings"
 
@@ -31,7 +30,7 @@ func NewTilemapLayer(data_path string, asset_path string, renderer *sdl.Renderer
 	layer := Layer{
 		layerType: 't',
 		data_path: data_path,
-		texture:   assetmanager.GetTexture(asset_path, renderer),
+		texture:   assetManager.GetTexture(asset_path, renderer),
 		tilemap:   &[settings.TILE_QUANTITY]tilemap.Tile{},
 	}
 
@@ -70,7 +69,6 @@ func (l *Layer) LoadTilemap() {
 	for scanner.Scan() {
 		content += scanner.Text()
 	}
-	fmt.Println(content)
 	for i := 0; i < settings.TILE_QUANTITY; i++ {
 		char := content[i]
 		switch char {
@@ -114,15 +112,4 @@ func (l *Layer) RenderTilemap(renderer *sdl.Renderer) {
 			)
 		}
 	}
-	/*renderer.Copy(
-		l.texture,
-		&sdl.Rect{
-			X: 0, Y: 0,
-			W: 32, H: 32,
-		},
-		&sdl.Rect{
-			X: 0, Y: 0,
-			W: 32, H: 32,
-		},
-	)*/
 }
