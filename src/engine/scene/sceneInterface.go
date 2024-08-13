@@ -1,8 +1,8 @@
 package scene
 
 import (
+	"project/src/engine/layer"
 	"project/src/entities/entity"
-	"project/src/layer"
 
 	"github.com/veandco/go-sdl2/sdl"
 )

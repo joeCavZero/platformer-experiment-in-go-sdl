@@ -2,9 +2,9 @@ package levels
 
 import (
 	"project/src/engine/engine"
+	"project/src/engine/layer"
 	"project/src/engine/scene"
 	"project/src/entities/player"
-	"project/src/layer"
 )
 
 type Level1 struct {
@@ -14,7 +14,7 @@ type Level1 struct {
 func NewLevel1(engine *engine.Engine) *Level1 {
 	level := Level1{}
 	level.AddLayer(
-		layer.NewTilemapLayer("data/level.data"),
+		layer.NewTilemapLayer("data/level.data", "assets/tilemap.png", engine.Renderer),
 	)
 	level.AddLayer(
 		layer.NewEntityLayer(),

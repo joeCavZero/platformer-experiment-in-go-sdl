@@ -1,9 +1,9 @@
 package scene
 
 import (
+	"project/src/engine/layer"
 	"project/src/engine/tilemap"
 	"project/src/entities/entity"
-	"project/src/layer"
 	"project/src/settings"
 
 	"github.com/veandco/go-sdl2/sdl"
