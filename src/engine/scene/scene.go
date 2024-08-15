@@ -41,9 +41,6 @@ func (s *Scene) Render(renderer *sdl.Renderer) {
 		switch lyr.GetLayerType() {
 		case 't':
 			lyr.RenderTilemap(renderer)
-
-			renderer.SetDrawColor(0, 0, 0, 0)
-			renderer.DrawLine(0, 0, 100, 100)
 		case 'e':
 			for _, ent := range s.GetEntities() {
 				if ent.GetLayer() == uint8(lyr_index) {

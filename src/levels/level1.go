@@ -14,7 +14,7 @@ type Level1 struct {
 func NewLevel1(engine *engine.Engine) *Level1 {
 	level := Level1{}
 	level.AddLayer(
-		layer.NewTilemapLayer("data/level.data", "assets/tilemap.png", engine.Renderer),
+		layer.NewTilemapLayer("data/level.data", "assets/grass-tile.png", engine.Renderer),
 	)
 	level.AddLayer(
 		layer.NewEntityLayer(),

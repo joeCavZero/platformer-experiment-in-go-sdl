@@ -94,23 +94,6 @@ func (l *Layer) LoadTilemap() {
 
 func (l *Layer) RenderTilemap(renderer *sdl.Renderer) {
 	for _, tile := range l.tilemap {
-		/*
-			if tile.TileType == 0 {
-				continue
-			} else {
-				renderer.Copy(
-					l.texture,
-					&sdl.Rect{
-						X: 0, Y: 0,
-						W: 32, H: 32,
-					},
-					&sdl.Rect{
-						X: tile.Position.X, Y: tile.Position.Y,
-						W: 32, H: 32,
-					},
-				)
-			}
-		*/
 
 		switch tile.TileType {
 		case 1:
@@ -123,8 +106,8 @@ func (l *Layer) RenderTilemap(renderer *sdl.Renderer) {
 			renderer.Copy(
 				l.texture,
 				&sdl.Rect{
-					X: 0, Y: 0,
-					W: 32, H: 32,
+					X: 16, Y: 16,
+					W: 16, H: 16,
 				},
 				&sdl.Rect{
 					X: tile.Position.X, Y: tile.Position.Y,
@@ -135,8 +118,8 @@ func (l *Layer) RenderTilemap(renderer *sdl.Renderer) {
 			renderer.Copy(
 				l.texture,
 				&sdl.Rect{
-					X: 32, Y: 0,
-					W: 32, H: 32,
+					X: 16, Y: 0,
+					W: 16, H: 16,
 				},
 				&sdl.Rect{
 					X: tile.Position.X, Y: tile.Position.Y,
